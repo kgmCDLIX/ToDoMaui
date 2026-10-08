@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ToDoMaui.MainPage"
+    Title="Todo List"
+    BackgroundColor="#F6F7F9">
+
+    <Grid>
+
+        <Grid
+            Padding="20"
+            RowDefinitions="Auto,Auto,*"
+            RowSpacing="18"
+            HorizontalOptions="Fill"
+            MaximumWidthRequest="700">
+
+            <!-- заголовок -->
+            <Label
+                Grid.Row="0"
+                Text="Мои задачи"
+                FontSize="30"
+                FontAttributes="Bold"
+                TextColor="#1F1F1F" />
+
+            <!-- +задача -->
+            <Grid
+                Grid.Row="1"
+                ColumnDefinitions="*,52"
+                ColumnSpacing="10">
+
+                
+                <Entry
+                    Grid.Column="0"
+                    Placeholder="Новая задача"
+                    Text="{Binding NewTaskTitle}"
+                    FontSize="16"
+                    ReturnType="Done"
+                    ReturnCommand="{Binding AddTaskCommand}" />
+
+                <!-- Кнопка + -->
+                <Button
+                    Grid.Column="1"
+                    Text="+"
+                    FontSize="25"
+                    FontAttributes="Bold"
+                    Padding="0"
+                    CornerRadius="12"
+                    BackgroundColor="#512BD4"
+                    TextColor="White"
+                    Command="{Binding AddTaskCommand}" />
+
+            </Grid>
+
+            <!-- Список задач -->
+            <CollectionView
+                Grid.Row="2"
+                ItemsSource="{Binding Tasks}"
+                SelectionMode="None">
+
+                <!-- Если задач нет -->
+                <CollectionView.EmptyView>
+
+                    <Label
+                        Text="Задач пока нет"
+                        Margin="0,30,0,0"
+                        HorizontalTextAlignment="Center"
+                        FontSize="16"
+                        TextColor="#999999" />
+
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+
+                    <!-- Шаблон задачи -->
+                    <DataTemplate>
+
+                        <Border
+                            Margin="0,0,0,10"
+                            Padding="12,8"
+                            BackgroundColor="White"
+                            Stroke="#E8E8E8"
+                            StrokeThickness="1">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+
+                            <Grid
+                                ColumnDefinitions="Auto,*,Auto"
+                                ColumnSpacing="10">
+
+                                <!-- Выполнение задачи -->
+                                <CheckBox
+                                    Grid.Column="0"
+                                    IsChecked="{Binding IsCompleted, Mode=TwoWay}"
+                                    VerticalOptions="Center" />
+
+                                <!-- Название -->
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding TaskName}"
+                                    FontSize="17"
+                                    TextColor="#242424"
+                                    LineBreakMode="WordWrap"
+                                    VerticalOptions="Center">
+
+                                    <!-- Зачеркивание -->
+                                    <Label.Triggers>
+
+                                        <DataTrigger
+                                            TargetType="Label"
+                                            Binding="{Binding IsCompleted}"
+                                            Value="True">
+
+                                            <Setter
+                                                Property="TextDecorations"
+                                                Value="Strikethrough" />
+
+                                            <Setter
+                                                Property="TextColor"
+                                                Value="#999999" />
+
+                                        </DataTrigger>
+
+                                    </Label.Triggers>
+
+                                </Label>
+
+                                <!-- Удаление -->
+                                <Button
+                                    Grid.Column="2"
+                                    Text="×"
+                                    FontSize="24"
+                                    WidthRequest="42"
+                                    HeightRequest="42"
+                                    Padding="0"
+                                    CornerRadius="10"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#777777"
+                                    CommandParameter="{Binding}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                    Path=BindingContext.DeleteTaskCommand}" />
+
+                            </Grid>
+
+                        </Border>
+
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+        </Grid>
+
+    </Grid>
+
+</ContentPage>
